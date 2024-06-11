@@ -5,31 +5,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 export default function EditProduct() {
     const [nameProduct, setNameProduct] = useState('')
     const [price, setPrice] = useState('')
-    const history = useNavigate('')
     const { id } = useParams();
+    const redirect = useNavigate('')
 
-    const editProduct = async (e) => {
+    const updateProduct = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.patch('http://localhost:4000/product', {
-                nameProduct: nameProduct,
-                price: price,
-            })
+        // console.log('Data:', { nameProduct, price });
+        await axios.patch(`http://localhost:4000/product/${id}`, {
+            id,
+            nameProduct,
+            price,
 
-            if (response.status === 200) {
-                // Product updated successfully
-                console.log("Product updated successfully!");
-                // You can redirect or perform other actions here
-            } else {
-                // Handle other status codes (e.g., 400 for bad request)
-                console.error("Error updating product:", response.data);
-            }
-        } catch (error) {
-            // Handle other errors
-            console.error("Error updating product:", error);
-        }
+        })
+        // console.log(nameProduct, price);
 
-        history("/");
+        redirect("/");
     }
 
     useEffect(() => {
@@ -39,11 +29,12 @@ export default function EditProduct() {
         const response = await axios.get(`http://localhost:4000/product/${id}`)
         setNameProduct(response.data.nameProduct)
         setPrice(response.data.price)
+        // console.log('URL', response)
     }
 
     return (
-        <div className="grid justify-items-center">
-            <form onSubmit={editProduct}>
+        <div className="grid mt-32 justify-items-center">
+            <form onSubmit={updateProduct}>
                 <div className="field">
                     <label className="form-control">
                         <div className="label">

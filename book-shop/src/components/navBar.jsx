@@ -1,6 +1,6 @@
 export default function NavBar() {
     return (
-        <div className="navbar bg-base-200 px-20">
+        <div className="navbar bg-white px-20">
             <div className="flex-1">
                 <a className="btn btn-ghost text-xl">Toko Buku</a>
             </div>

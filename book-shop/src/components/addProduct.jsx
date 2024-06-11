@@ -5,26 +5,47 @@ import { useNavigate } from 'react-router-dom';
 export default function AddProduct() {
     const [nameProduct, setNameProduct] = useState('')
     const [price, setPrice] = useState('')
-    const history = useNavigate('')
+    const [image, setImage] = useState('')
+    const [descProduct, setDescProduct] = useState('')
+    const push = useNavigate('')
 
     const saveProduct = async (e) => {
+        console.log(image);
         e.preventDefault();
         await axios.post('http://localhost:4000/product', {
+            image,
             nameProduct: nameProduct,
+            descProduct: descProduct,
             price: price,
         })
-        history("/");
+        push("/");
     }
 
     return (
-        <div className="grid justify-items-center">
+        <div className="grid mt-32 justify-items-center">
             <form onSubmit={saveProduct}>
+                <div className="field">
+                    <label className="form-control">
+                        <div className="label">
+                            <span className="label-text">Image</span>
+                        </div>
+                        <input type="file" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Image" className="input input-bordered w-full max-w-md" />
+                    </label>
+                </div>
                 <div className="field">
                     <label className="form-control">
                         <div className="label">
                             <span className="label-text">Name Book</span>
                         </div>
                         <input type="text" value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} placeholder="Name Book" className="input input-bordered w-full max-w-md" />
+                    </label>
+                </div>
+                <div className="field">
+                    <label className="form-control">
+                        <div className="label">
+                            <span className="label-text">Description</span>
+                        </div>
+                        <input type="text" value={descProduct} onChange={(e) => setDescProduct(e.target.value)} placeholder="Description" className="input input-bordered w-full max-w-md" />
                     </label>
                 </div>
                 <div className="field">
