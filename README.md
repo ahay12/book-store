@@ -3,10 +3,18 @@ Backend Codeigniter 4 and Frontend React Vite
 
 to start project
 # React
-```npm i```
+```bash 
+npm i
+```
 and
-```npm run dev```
+```bash
+npm run dev
+```
 # Codeigniter 4
-```composser install```
+```bash
+composser install
+```
 and
-```php spark serve --port 4000```
+```bash
+php spark serve --port 4000
+```
