@@ -15,6 +15,15 @@ Options -Indexes
 	# change the following line to match the subfolder you need.
 	# http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
 	# RewriteBase /
+	# RewriteCond %{REQUEST_URI} !-f
+	# RewriteCond %{REQUEST_URI} !-d
+	# RewriteRule ^public/?(.*)$ public/$1 [NC,L]
+
+	# RewriteCond %{HTTP_HOST} ^$ [NC,OR]
+	# RewriteCond %{REQUEST_URI} !public/
+	# RewriteRule (.*) /public/$1 [L]
+
+
 
 	# Redirect Trailing Slashes...
 	RewriteCond %{REQUEST_FILENAME} !-d
@@ -29,6 +38,7 @@ Options -Indexes
 	# Checks to see if the user is attempting to access a valid file,
 	# such as an image or css document, if this isn't true it sends the
 	# request to the front controller, index.php
+	RewriteCond $1 !^(index\.php|assets|images|js|css|uploads|favicon.png)
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
@@ -55,7 +65,7 @@ Options -Indexes
 	# If we don't have mod_rewrite installed, all 404's
 	# can be sent to index.php, and everything works as normal.
 	ErrorDocument 404 index.php
-</IfModule>
+</IfModule> 
 
 # Disable server signature start
 ServerSignature Off
