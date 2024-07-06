@@ -12,7 +12,7 @@ npm run dev
 ```
 # Codeigniter 4
 ```bash
-composser install
+composer install
 ```
 and
 ```bash
