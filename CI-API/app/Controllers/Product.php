@@ -7,9 +7,6 @@ use CodeIgniter\API\ResponseTrait;
 use App\Models\ProductModel;
 use CodeIgniter\I18n\Time;
 
-header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 define('IMAGE_BASE_URL', 'http://localhost:4000/images/');
 
 class Product extends ResourceController

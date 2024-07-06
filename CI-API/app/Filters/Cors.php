@@ -34,7 +34,7 @@ class Cors implements FilterInterface
         $response->setHeader('Access-Control-Allow-Origin', '*');
 
         // Set this header if the client sends Cookies.
-        // $response->setHeader('Access-Control-Allow-Credentials', 'true');
+        $response->setHeader('Access-Control-Allow-Credentials', 'true');
 
         if ($request->is('OPTIONS')) {
             $response->setStatusCode(204);
@@ -52,7 +52,7 @@ class Cors implements FilterInterface
             );
 
             // Set how many seconds the results of a preflight request can be cached.
-            $response->setHeader('Access-Control-Max-Age', '3600');
+            // $response->setHeader('Access-Control-Max-Age', '3600');
 
             return $response;
         }

@@ -8,6 +8,6 @@ class ProductModel extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nameProduct', 'descProduct', 'price', 'image', 'author', 'discount', 'created_at'];
+    protected $allowedFields = ['nameProduct', 'descProduct', 'price', 'image', 'author', 'discount', 'created_at', 'stock'];
     // protected $useTimestamps = true;
 }

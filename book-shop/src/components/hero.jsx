@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import FormatRupiah from "./toRupiah"
-import CartContext from "./cart"
+import { CartContext } from "./cartContext"
 
 
 export default function Hero() {

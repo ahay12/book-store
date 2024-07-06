@@ -3,26 +3,30 @@ import NavBar from "./navBar";
 import FormatRupiah from "./toRupiah";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
+import Footer from "./footer";
+import { Link } from "react-router-dom";
 
 export default function Product() {
     const [products, setProducts] = useState([])
     const [value, setValue] = useState(1000000)
+    const [q, setQ] = useState('')
+    console.log(q)
 
-    const [itemOffset, setItemOffset] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0)
     const itemsPerPage = 12
-    const endOffset = itemOffset + itemsPerPage;
+    const endOffset = itemOffset + itemsPerPage
 
     // const items = Array(100).fill()
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`)
 
-    const currentItems = products.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(products.length / itemsPerPage);
+    const currentItems = products.slice(itemOffset, endOffset)
+    const pageCount = Math.ceil(products.length / itemsPerPage)
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % products.length;
-        console.log(
-            `User requested page number ${event.selected}, which is offset ${newOffset}`
-        );
+        const newOffset = (event.selected * itemsPerPage) % products.length
+        // console.log(
+        //     `User requested page number ${event.selected}, which is offset ${newOffset}`
+        // );
         setItemOffset(newOffset);
     };
 
@@ -30,7 +34,7 @@ export default function Product() {
     const getProducts = async () => {
         const response = await axios.get('http://localhost:4000/product')
         setProducts(response.data.product)
-        // setIsLoading(false)
+        // console.log(response.data.product)
     }
 
     useEffect(() => {
@@ -38,8 +42,17 @@ export default function Product() {
     }, [])
 
     const handleChange = (event) => {
-        setValue(event.target.value);
+        setValue(event.target.value)
     }
+
+    const handleSearchChange = (event) => {
+        setQ(event.target.value?.toLowerCase()); // Convert search term to lowercase for case-insensitive search
+    }
+
+    const filteredProducts = products.filter((product) =>
+        product.nameProduct?.toLowerCase().includes(q) // Search by product name (adjust based on your data structure)
+    )
+    // console.log(filteredProducts)
 
     const markerStyle = {
         left: `${value / 100 * 100}%`,
@@ -156,29 +169,51 @@ export default function Product() {
                     </div>
                     <div className="ml-5">
                         <h1 className="text-2xl">Books</h1>
+                        <div className="py-10">
+                            <label className="input input-bordered flex items-center gap-2">
+                                <input value={q} onChange={handleSearchChange} type="text" className="grow" placeholder="Search" />
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
+                            </label>
+                            {/* <div>
+                                {filteredProducts.length > 0 ? (
+                                    <ul>
+                                        {filteredProducts.map((product) => (
+                                            <div key={product.id}>
+                                                <img src={product.image} alt="" />
+                                                <p>{product.nameProduct}</p>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>No results found</p>
+                                )}
+                            </div> */}
+                        </div>
                         <div className="grid grid-cols-4 gap-x-2 gap-y-5">
-                            {currentItems.map((product) => (
-                                <div key={product.id} className="w-[230px] h-[320px] bg-primary rounded-lg">
-                                    <img className="w-[230px] h-[220px] rounded-lg  " src={`${product.image || 'http://localhost:4000/images/no_image.jpg'}`} alt={product.name} />
-                                    <div className="ml-2 mt-2">
-                                        <p>{product.nameProduct}</p>
-                                        <p>{FormatRupiah(product.price)}</p>
-                                    </div>
-                                </div>
-                            ))}
-                            {/* {currentItems.map((_, index) => (
-                                <div key={index + 1} className="w-[200px] h-[280px] bg-primary rounded-lg">
-                                    <img className="w-[230px] h-[200px] rounded-lg" src={`${'http://localhost:4000/images/no_image.jpg' || 'http://localhost:4000/images/no_image.jpg'}`} alt="" />
-                                    <span className="w-[50px] h-[50x]">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 hover:fill-pink-500">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                                        </svg>
-                                    </span>
-                                    <p>{product.name}</p>
-                                    <p>{product.price}</p>
-                                </div>
-                            ))}
-                             */}
+                            {filteredProducts.length > 0 ? (
+                                <>
+                                    {filteredProducts.map((product) => (
+                                        <div key={product.id} className="w-[230px] h-auto bg-primary rounded-lg">
+                                            <Link to={`/product-detail/${product.id}`}>
+                                                <img className="w-[230px] h-[280px] rounded-lg  " src={`${product.image || 'http://localhost:4000/images/no_image.jpg'}`} alt={product.name} />
+                                                <div className="ml-2 mt-2 text-center">
+                                                    <p>{product.nameProduct}</p>
+                                                    <p>{FormatRupiah(product.price)}</p>
+                                                    <div className="rating">
+                                                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+                                                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+                                                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+                                                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" checked />
+                                                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </>
+                            ) : (
+                                <p>Not results found</p>
+                            )}
                         </div>
                         <ReactPaginate
                             className='flex items-center place-content-center'
@@ -192,7 +227,8 @@ export default function Product() {
 
                     </div>
                 </div>
-            </div>
+            </div >
+            <Footer />
         </>
     )
 }

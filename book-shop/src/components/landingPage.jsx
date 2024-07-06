@@ -6,15 +6,15 @@ import Recommended from "./recommended"
 import SpecialOffers from "./specialOffers"
 import WhyChooseMe from "./whyChooseMe"
 import NavBar from "./navBar"
-import { CartProvider } from "./cart"
+import { CartProvider } from "./cartContext"
 
 export default function LandingPage() {
 
     return (
         <>
-            <Helmet>
+            {/* <Helmet>
                 <title>Home | Book Store</title>
-            </Helmet>
+            </Helmet> */}
             <CartProvider>
                 <NavBar />
                 <Hero />

@@ -11,7 +11,7 @@ export default function EditProduct() {
     const [discount, setDiscount] = useState('0')
 
 
-    const { id } = useParams();
+    const { id } = useParams()
     const push = useNavigate('')
 
     const updateProduct = async (e) => {
@@ -29,7 +29,7 @@ export default function EditProduct() {
         })
         // console.log(nameProduct, price);
 
-        push("/product-list");
+        push("/admin");
     }
 
     useEffect(() => {

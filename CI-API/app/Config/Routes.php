@@ -10,8 +10,11 @@ $routes->group('', ['filter' => 'cors'], static function (RouteCollection $route
     $routes->options('product', '\Dummy');
     $routes->options('product/(:any)', '\Dummy');
     $routes->resource('product');
-    $routes->resource('user');
-    // $routes->resource('/login')
+    $routes->post('login', 'Login');
+    $routes->post('register', 'Register');
+    $routes->post('logout', 'Logout');
+    $routes->post('cart/add', 'Cart::addItem');
+    $routes->get('cart', 'Cart::getCart');
+    $routes->delete('cart/remove/(:num)', 'Cart::removeItem/$1');
+    $routes->get('users', 'User', ['filter' => 'auth']);
 });
-$routes->post('api/login', 'Login::index');
-// $route['/api/login'] = 'Login::login';

@@ -30,7 +30,7 @@ export default function AddProduct() {
                 }
             })
             setNameProduct(response.data)
-            push('/product-list')
+            push('/admin')
             // console.log('price', price);
             // console.log(discount);
         } catch (error) {

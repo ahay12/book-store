@@ -1,7 +1,7 @@
 export default function Recommended() {
     return (
         <>
-            <div className="container py-10">
+            <div id="recommendedBooks" className="container py-10">
                 <div className="flex flex-row">
                     <div className="flex w-1/2 justify-end px-5">
                         <img src="http://localhost:4000/images/recommended.jpg" className="skeleton w-[500px] h-[700px] bg-slate-200 rounded-2xl" />
