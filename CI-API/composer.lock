@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c8518bfebfa3966bf9e0943ce0ddb0b",
+    "content-hash": "3b4b358a840d831cb9a3a3df76c79e48",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -1313,16 +1313,16 @@
         },
         {
             "name": "xendit/xendit-php",
-            "version": "4.0.0",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xendit/xendit-php.git",
-                "reference": "0a9e7a5d5b7a9ccbdd66987aa84457f9bd930a4c"
+                "reference": "315f6412c9427233cfe98f7eb3645654a83f5e70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xendit/xendit-php/zipball/0a9e7a5d5b7a9ccbdd66987aa84457f9bd930a4c",
-                "reference": "0a9e7a5d5b7a9ccbdd66987aa84457f9bd930a4c",
+                "url": "https://api.github.com/repos/xendit/xendit-php/zipball/315f6412c9427233cfe98f7eb3645654a83f5e70",
+                "reference": "315f6412c9427233cfe98f7eb3645654a83f5e70",
                 "shasum": ""
             },
             "require": {
@@ -1367,9 +1367,9 @@
             ],
             "support": {
                 "issues": "https://github.com/xendit/xendit-php/issues",
-                "source": "https://github.com/xendit/xendit-php/tree/4.0.0"
+                "source": "https://github.com/xendit/xendit-php/tree/5.0.0"
             },
-            "time": "2023-12-01T06:24:46+00:00"
+            "time": "2024-04-01T03:39:38+00:00"
         }
     ],
     "packages-dev": [
