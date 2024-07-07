@@ -16,5 +16,7 @@ $routes->group('', ['filter' => 'cors'], static function (RouteCollection $route
     $routes->post('cart/add', 'Cart::addItem');
     $routes->get('cart', 'Cart::getCart');
     $routes->delete('cart/remove/(:num)', 'Cart::removeItem/$1');
+    $routes->patch('cart/decreaseQuantity/(:num)', 'Cart::decreaseQuantity/$1');
+    $routes->patch('cart/increaseQuantity/(:num)', 'Cart::increaseQuantity/$1');
     $routes->get('users', 'User', ['filter' => 'auth']);
 });

@@ -186,10 +186,11 @@ import { jwtDecode } from "jwt-decode";
 
 export default function NavBar() {
     // const { cartItemsCount, totalBuy } = useContext(CartContext);
-    const { cart } = useContext(CartContext)
+    const { cart, fetchCart } = useContext(CartContext)
     // Function to handle logout
     const logout = () => {
         localStorage.removeItem('jwtToken'); // Remove JWT token from local storage
+        localStorage.removeItem('cart'); // Remove JWT token from local storage
         window.location.href = '/login'; // Redirect to login page
     };
 
@@ -207,7 +208,7 @@ export default function NavBar() {
             console.error('Invalid token');
         }
     }
-    const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+    const totalQuantity = fetchCart.reduce((acc, item) => acc + item.quantity, 0);
 
     return (
         <>
@@ -253,7 +254,7 @@ export default function NavBar() {
                                         {/* <span className="text-info"></span> */}
                                         <hr className="my-2 border-blue-gray-50" />
                                         <ul>
-                                            {cart.map((item) => (
+                                            {fetchCart?.map((item) => (
                                                 <li key={item.id}>
                                                     <span>{item.nameProduct} (Qty: {item.quantity})</span>
                                                     <span>Total {FormatRupiah(item.totalAmount)}</span> {/* Format price if needed */}
