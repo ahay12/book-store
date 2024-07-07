@@ -77,7 +77,7 @@ const ProtectedAdminRoute = ({ children }) => {
       console.error('Invalid token');
     }
   }
-  return isAdmin ? children : <Navigate to="/login" replace />;
+  return isAdmin || isLoggedIn ? children : <Navigate to="/login" replace />;
 };
 
 export default function App() {
@@ -89,9 +89,11 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/checkout" element={
-            <CartProvider>
-              <Checkout />
-            </CartProvider>} />
+            <ProtectedAdminRoute>
+              <CartProvider>
+                <Checkout />
+              </CartProvider>
+            </ProtectedAdminRoute>} />
           <Route path="/product" element={
             <CartProvider>
               <Product />
