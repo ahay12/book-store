@@ -8,9 +8,16 @@ use App\Models\ProductModel;
 use CodeIgniter\I18n\Time;
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Xendit\Configuration;
+use Xendit\Invoice\InvoiceApi;
 
 class Cart extends ResourceController
 {
+    public function __construct()
+    {
+        $xenditApiKey = getenv('XENDIT_SECRET_KEY');
+        Configuration::setXenditKey($xenditApiKey);
+    }
     // Middleware to check JWT
     private function getUserFromToken()
     {
@@ -53,12 +60,12 @@ class Cart extends ResourceController
         $productModel = new ProductModel();
         $cartData = $this->request->getJSON();
 
-        if (!isset($cartData->cart) || !isset($cartData->totalBuy)) {
+        if (!isset($cartData->cart)) {
             return $this->failValidationErrors('Invalid cart data');
         }
 
         $cartItems = $cartData->cart;
-        $totalBuy = $cartData->totalBuy;
+        // $totalBuy = $cartData->totalBuy;
 
         foreach ($cartItems as $item) {
             $productId = $item->id;
@@ -77,7 +84,7 @@ class Cart extends ResourceController
             $cartItem = $cartModel->where('user_id', $userId)->where('product_id', $productId)->first();
             if ($cartItem) {
                 // Update quantity and total amount if item already exists in the cart
-                $cartModel->update($cartItem['id'], ['quantity' => $quantity, 'total' => $totalBuy], ['updated_at' => Time::now()]);
+                $cartModel->update($cartItem['id'], ['quantity' => $quantity], ['updated_at' => Time::now()]);
             } else {
                 // Add new item to the cart
                 $cartModel->save([
@@ -86,7 +93,6 @@ class Cart extends ResourceController
                     'nameProduct' => $nameProduct,
                     'price' => $price,
                     'quantity' => $quantity,
-                    'total' => $totalBuy,
                     'created_at' => Time::now(),
                 ]);
             }
@@ -110,7 +116,7 @@ class Cart extends ResourceController
             return $this->failNotFound('Item not found in cart');
         }
 
-        $newQuantity = $cartItem['quantity'] + 1;
+        $newQuantity = $cartItem['quantity'] += 1;
         $newTotal = $newQuantity * $cartItem['price'];
 
         $cartModel->update($cartItem['id'], ['quantity' => $newQuantity, 'total' => $newTotal, 'updated_at' => Time::now()]);
@@ -146,19 +152,48 @@ class Cart extends ResourceController
     }
 
 
+    // // Get user's cart
+    // public function getCart()
+    // {
+    //     $userId = $this->getUserFromToken();
+    //     if (!$userId) {
+    //         return $this->failUnauthorized('Unauthorized');
+    //     }
+
+    //     $cartModel = new CartModel();
+    //     $cartItems = $cartModel->getCartItems($userId);
+    //     // print_r($cartItems);
+    //     return $this->respond($cartItems);
+    // }
+
     // Get user's cart
     public function getCart()
     {
         $userId = $this->getUserFromToken();
-        if (!$userId) {
-            return $this->failUnauthorized('Unauthorized');
+        if ($userId instanceof \CodeIgniter\HTTP\Response) {
+            return $userId; // If getUserFromToken returns a response, return it directly
         }
 
         $cartModel = new CartModel();
         $cartItems = $cartModel->getCartItems($userId);
-        // print_r($cartItems);
-        return $this->respond($cartItems);
+
+        // Accumulate quantity and total
+        $totalAmount = 0;
+
+        foreach ($cartItems as $item) {
+            $totalAmount += $item['price'] * $item['quantity'];
+        }
+
+        // Include accumulated totals in the response
+        $response = [
+            'cart' => $cartItems,
+            'totalAmount' => $totalAmount
+        ];
+
+        return $this->respond($response);
     }
+
+
 
     // Remove item from cart
     public function removeItem($id)
@@ -176,5 +211,97 @@ class Cart extends ResourceController
 
         $cartModel->delete($id);
         return $this->respondDeleted(['message' => 'Item removed from cart']);
+    }
+
+    // // checkout
+    // public function checkout()
+    // {
+    //     $userId = $this->getUserFromToken();
+    //     if ($userId instanceof \CodeIgniter\HTTP\Response) {
+    //         return $userId;
+    //     }
+
+    //     $cartModel = new CartModel();
+    //     $cartItems = $cartModel->getCartItems($userId);
+
+    //     $totalAmount = 0;
+    //     foreach ($cartItems as $item) {
+    //         $totalAmount += $item['price'] * $item['quantity'];
+    //     }
+
+    //     if ($totalAmount == 0) {
+    //         return $this->fail('Your cart is empty');
+    //     }
+
+    //     $apiInstance = new InvoiceApi();
+    //     $create_invoice_request = new Xendit\Invoice\CreateInvoiceRequest([
+    //         'external_id' => 'order-' . time(),
+    //         'description' => 'Order payment for user ID ' . $userId,
+    //         'amount' => $totalAmount,
+    //         'invoice_duration' => 172800,
+    //         'currency' => 'IDR',
+    //         'reminder_time' => 1
+    //     ]);
+    //     $for_user_id = "66856ede003b91620b24d58c";
+
+    //     try {
+    //         $result = $apiInstance->createInvoice($create_invoice_request, $for_user_id);
+    //         return $this->respond(['message' => 'Checkout successful', 'invoice_url' => $result->getInvoiceUrl()]);
+    //     } catch (\Xendit\XenditSdkException $e) {
+    //         log_message('error', 'Xendit create invoice error: ' . $e->getMessage());
+    //         return $this->failServerError('Failed to create payment invoice');
+    //     }
+    // }
+
+    // Checkout and create Xendit invoice
+    public function checkout()
+    {
+        $userId = $this->getUserFromToken();
+        if ($userId instanceof \CodeIgniter\HTTP\Response) {
+            return $userId;
+        }
+
+        $cartModel = new CartModel();
+        $cartItems = $cartModel->getCartItems($userId);
+
+        $totalAmount = 0;
+
+        foreach ($cartItems as $item) {
+            $totalAmount += $item['price'] * $item['quantity'];
+
+            if ($totalAmount == 0) {
+                return $this->fail('Your cart is empty');
+            }
+            // Collect item details for Xendit invoice
+            $items[] = [
+                'name' => $item['nameProduct'], // Assuming 'nameProduct' is the product name field
+                'quantity' => $item['quantity'],
+                'price' => $item['price'], // Include price if needed
+            ];
+        }
+
+        // Initialize Xendit
+        Configuration::setXenditKey(getenv('XENDIT_SECRET_KEY'));
+
+        $apiInstance = new InvoiceApi();
+        $params = [
+            'external_id' => 'checkout_' . uniqid(),
+            'amount' => $totalAmount,
+            'items' => $items,
+            'payer_email' => 'customer@example.com', // Change this to the actual payer's email
+            'description' => 'Purchase from Your Store',
+            'invoice_duration' => 86400, // 24 hours
+            'success_redirect_url' => 'http://localhost:5173',
+        ];
+        $for_user_id = "62efe4c33e45694d63f585f0";
+        // print_r($params);
+
+        // Create Xendit invoice
+        try {
+            $result = $apiInstance->createInvoice($params);
+            return $this->respond(['invoice_url' => $result['invoice_url']]);
+        } catch (\Xendit\XenditSdkException $e) {
+            return $this->fail('Failed to create invoice: ' . $e->getMessage());
+        }
     }
 }

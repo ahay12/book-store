@@ -118,7 +118,7 @@ import { CartContext } from './cartContext';
 import FormatRupiah from './toRupiah';
 
 export default function Checkout() {
-    const { fetchCart, totalBuy, removeFromCart, fetchCartFromBackend, increaseQuantity, decreaseQuantity } = useContext(CartContext);
+    const { fetchCart, removeFromCart, fetchCartFromBackend, totalAmount, increaseQuantity, decreaseQuantity, checkout } = useContext(CartContext);
     const [message, setMessage] = useState('');
 
     useEffect(() => {
@@ -135,14 +135,16 @@ export default function Checkout() {
                 <h1>Your Cart</h1>
                 {fetchCart.length > 0 ? (
                     fetchCart.map(item => (
-                        <div className='p-5' key={item.id}>
+                        <div className='grid gap-2' key={item.id}>
                             <ul>
                                 <li>{item.nameProduct}</li>
                                 <li>Qty: {item.quantity}</li>
                                 <li>Price: {FormatRupiah(item.price)}</li>
-                                <button className='btn btn-error' onClick={() => removeFromCart(item.id)}>Remove</button>
-                                <button className='btn btn-secondary' onClick={() => increaseQuantity(item.product_id)}>+</button>
-                                <button className='btn btn-secondary' onClick={() => decreaseQuantity(item.product_id)}>-</button>
+                                <div className='grid grid-flow-col gap-5'>
+                                    <button className='btn btn-error' onClick={() => removeFromCart(item.id)}>Remove</button>
+                                    <button className='btn btn-secondary' onClick={() => increaseQuantity(item.product_id)}>+</button>
+                                    <button className='btn btn-secondary' onClick={() => decreaseQuantity(item.product_id)}>-</button>
+                                </div>
                             </ul>
                             <hr className='bg-gray-500 my-5' />
                         </div>
@@ -150,9 +152,9 @@ export default function Checkout() {
                 ) : (
                     <p>Your cart is empty</p>
                 )}
-                <span>Total Paid: {FormatRupiah(totalBuy)}</span>
+                <span className='font-bold'>Total Paid: {FormatRupiah(totalAmount)}</span>
                 <hr />
-                <button className='my-5 btn btn-secondary'>Checkout</button>
+                <button onClick={checkout} className='my-5 btn btn-secondary'>Checkout</button>
                 {message && <p>{message}</p>}
             </div>
         </div>
