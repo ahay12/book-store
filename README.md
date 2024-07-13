@@ -18,6 +18,7 @@ to start project
 ```bash 
 https://github.com/ahay12/book-store/tree/892f4c3a5018168d542fefd6c250113d1320ffb2/book-shop.git
 ```
+prepare plugin
 ```bash 
 npm i
 ```
@@ -29,6 +30,7 @@ npm run dev
 ```bash 
 https://github.com/ahay12/book-store/tree/892f4c3a5018168d542fefd6c250113d1320ffb2/CI-API.git
 ```
+prepare plugin
 ```bash
 composer install
 ```
