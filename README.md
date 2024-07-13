@@ -12,7 +12,10 @@ I am developing an online book sales website using PHP with the CodeIgniter 4 fr
 <li>User Interface: Using React to build a responsive and dynamic user interface.</li>
 <li>Optimization: Leveraging Vite to speed up the development and build process of the application.</li>
 <li>Interaction with Backend: Implementing API calls to interact with the backend, including features like book search, adding items to the shopping cart, and user account management.</li>
-to start project
+
+
+# to start project
+
 # React
 ```bash 
 npm i
