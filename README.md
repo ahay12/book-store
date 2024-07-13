@@ -14,11 +14,13 @@ I am developing an online book sales website using PHP with the CodeIgniter 4 fr
 <li>Interaction with Backend: Implementing API calls to interact with the backend, including features like book search, adding items to the shopping cart, and user account management.</li>
 to start project
 
+# Download source
+```bash
+https://github.com/ahay12/book-store.git
+```
+
 # React
 
-```bash 
-https://github.com/ahay12/book-store/tree/main/book-shop.git
-```
 prepare plugin
 ```bash 
 npm i
@@ -28,9 +30,7 @@ and
 npm run dev
 ```
 # Codeigniter 4
-```bash 
-https://github.com/ahay12/book-store/tree/main/CI-API.git
-```
+
 prepare plugin
 ```bash
 composer install
